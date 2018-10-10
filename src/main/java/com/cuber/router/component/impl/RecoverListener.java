@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
 
-@Component("normalListener")
-public class NormalListener extends AsyncAbstractListener {
+
+@Component("recoverListener")
+public class RecoverListener extends AsyncAbstractListener {
 
     @Autowired
-    @Qualifier("normalHandler")
-    private Handler normalHandler;
+    @Qualifier("recoverHandler")
+    private Handler recoverHandler;
 
 
     @Override
@@ -28,9 +29,9 @@ public class NormalListener extends AsyncAbstractListener {
                         channelStatusManager.updateStatus(event.getChannelCode(),event.getTo()), executor)
                 .thenAccept((result) -> {
                     if (result) {
-                        channelStatusManager.updateWeight(event.getChannelCode(), 100);
+                        channelStatusManager.updateWeight(event.getChannelCode(), 5);
                     }})
                 .thenRun(() ->
-                        normalHandler.handle(event.getChannelCode()));
+                        recoverHandler.handle(event.getChannelCode()));
     }
 }

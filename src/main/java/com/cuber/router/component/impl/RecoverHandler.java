@@ -3,8 +3,8 @@ package com.cuber.router.component.impl;
 import com.cuber.router.component.Handler;
 import org.springframework.stereotype.Component;
 
-@Component("breakHandler")
-public class BreakHandler implements Handler {
+@Component("recoverHandler")
+public class RecoverHandler implements Handler {
 
     @Override
     public void handle(String channelCode) {
