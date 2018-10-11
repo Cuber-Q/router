@@ -9,6 +9,6 @@ public interface MonitorStorage {
 
     void writeAsync(MonitorData data);
 
-    List<MonitorMetaData> read(int range);
+    List<MonitorMetaData> read(String channelCode, int range);
 
 }

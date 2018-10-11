@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +27,7 @@ public class LocalMapMonitorStorage implements MonitorStorage, InitializingBean 
         CompletableFuture.runAsync(()-> {
             data.getMetaDataList()
                     .forEach((metaData) ->{
-                        String key = String.valueOf(metaData.getTimestamp() % DateUtils.MILLIS_PER_SECOND);
+                        String key = buildKey(metaData.getTimestamp());
                         MonitorMetaData previousData = localMap.putIfAbsent(key, metaData);
                         if (null != previousData) {
                             previousData.merge(metaData);
@@ -38,8 +39,24 @@ public class LocalMapMonitorStorage implements MonitorStorage, InitializingBean 
     }
 
     @Override
-    public List<MonitorMetaData> read(int range) {
-        return null;
+    public List<MonitorMetaData> read(String channelCode, int range) {
+        List<String> keys = buildKeyList(System.currentTimeMillis(), range);
+        List<MonitorMetaData> result = new ArrayList<>(keys.size());
+        keys.forEach((key) -> result.add(localMap.get(key)));
+        return result;
     }
 
+    private String buildKey(Long timestamp) {
+        return String.valueOf(timestamp % DateUtils.MILLIS_PER_SECOND);
+    }
+
+    private List<String> buildKeyList(Long timestamp, int range) {
+        List<String> keys = new ArrayList<>();
+        while (range > 0) {
+            keys.add(buildKey(timestamp));
+            timestamp -= DateUtils.MILLIS_PER_SECOND;
+            range --;
+        }
+        return keys;
+    }
 }

@@ -10,8 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
-    private String channelCode;
-    private Long timeStamp;
-    private ChannelStatus from;
-    private ChannelStatus to;
+    protected String channelCode;
+    protected Long timeStamp;
+    protected ChannelStatus from;
+    protected ChannelStatus to;
 }

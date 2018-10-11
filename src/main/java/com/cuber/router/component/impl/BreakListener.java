@@ -1,7 +1,7 @@
 package com.cuber.router.component.impl;
 
+import com.cuber.router.common.ChannelStatus;
 import com.cuber.router.component.Handler;
-import com.cuber.router.entity.BreakEvent;
 import com.cuber.router.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,7 @@ public class BreakListener extends AsyncAbstractListener {
 
     @Override
     public void notifyAsync(Event event) {
-        if (!(event instanceof BreakEvent)) {
+        if (event.getTo() != ChannelStatus.BROKEN) {
             return;
         }
 

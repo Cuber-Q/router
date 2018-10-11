@@ -1,8 +1,8 @@
 package com.cuber.router.component.impl;
 
+import com.cuber.router.common.ChannelStatus;
 import com.cuber.router.component.Handler;
 import com.cuber.router.entity.Event;
-import com.cuber.router.entity.NormalEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class RecoverListener extends AsyncAbstractListener {
 
     @Override
     public void notifyAsync(Event event) {
-        if (!(event instanceof NormalEvent)) {
+        if (event.getTo() != ChannelStatus.RECOVER) {
             return;
         }
 
