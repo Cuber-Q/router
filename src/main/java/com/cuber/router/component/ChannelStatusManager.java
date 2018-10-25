@@ -1,6 +1,7 @@
 package com.cuber.router.component;
 
 import com.cuber.router.common.ChannelStatus;
+import com.cuber.router.entity.Event;
 
 import java.util.Map;
 
@@ -15,4 +16,6 @@ public interface ChannelStatusManager {
     Map<String, Integer> getAllWeights();
 
     ChannelStatus getStatus(String channelCode);
+
+    Boolean atomUpdate(Event event);
 }

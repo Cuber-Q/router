@@ -2,6 +2,7 @@ package com.cuber.router.component.impl;
 
 import com.cuber.router.common.ChannelStatus;
 import com.cuber.router.component.ChannelStatusManager;
+import com.cuber.router.entity.Event;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -69,5 +70,13 @@ public class LocalChannelStatusManager implements ChannelStatusManager {
     @Override
     public ChannelStatus getStatus(String channelCode) {
         return statusMap.get(channelCode);
+    }
+
+    @Override
+    public Boolean atomUpdate(Event event) {
+        String channelCode = event.getChannelCode();
+        statusMap.put(channelCode, event.getTo());
+        weightMap.put(channelCode, event.getWeight());
+        return true;
     }
 }
