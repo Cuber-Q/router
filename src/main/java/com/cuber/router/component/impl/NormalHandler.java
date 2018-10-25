@@ -1,13 +1,12 @@
 package com.cuber.router.component.impl;
 
 import com.cuber.router.common.ChannelStatus;
-import com.cuber.router.component.AsyncListener;
 import com.cuber.router.component.Handler;
 import com.cuber.router.component.MonitorStorage;
+import com.cuber.router.component.eventbus.EventBusCenter;
 import com.cuber.router.entity.Event;
 import com.cuber.router.entity.MonitorMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,8 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NormalHandler implements Handler {
 
     @Autowired
-    @Qualifier("breakListener")
-    private AsyncListener listener;
+    private EventBusCenter eventBusCenter;
 
     @Autowired
     private MonitorStorage monitorStorage;
@@ -42,7 +40,7 @@ public class NormalHandler implements Handler {
 
         // fail rate > 0.5, trigger BREAK_EVENT
         if ((double) failSum.get() / (double) sum.get() > 0.5) {
-            listener.notifyAsync(Event.builder()
+            eventBusCenter.postAsync(Event.builder()
                     .channelCode(channelCode)
                     .timeStamp(System.currentTimeMillis())
                     .from(ChannelStatus.NORMAL)

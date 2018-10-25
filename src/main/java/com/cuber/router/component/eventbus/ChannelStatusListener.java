@@ -44,7 +44,30 @@ public class ChannelStatusListener {
             return;
         }
 
+        event.setWeight(100);
         CompletableFuture.supplyAsync(() -> channelStatusManager.atomUpdate(event))
                 .thenRun(() -> normalHandler.handle(event.getChannelCode()));
+    }
+
+    @Subscribe
+    public void onBreak(Event event) {
+        if (event.getTo() != ChannelStatus.BROKEN) {
+            return;
+        }
+
+        event.setWeight(1);
+        CompletableFuture.supplyAsync(() -> channelStatusManager.atomUpdate(event))
+                .thenRun(() -> breakHandler.handle(event.getChannelCode()));
+    }
+
+    @Subscribe
+    public void onRecover(Event event) {
+        if (event.getTo() != ChannelStatus.RECOVER) {
+            return;
+        }
+
+        event.setWeight(5);
+        CompletableFuture.supplyAsync(() -> channelStatusManager.atomUpdate(event))
+                .thenRun(() -> recoverHandler.handle(event.getChannelCode()));
     }
 }
