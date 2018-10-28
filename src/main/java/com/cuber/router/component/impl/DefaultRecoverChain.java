@@ -6,6 +6,7 @@ import com.cuber.router.component.RecoverSubHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -26,6 +27,19 @@ public class DefaultRecoverChain implements RecoverChain {
 
     @Override
     public ChannelStatus doChainedRecover(String channelCode) {
-        return null;
+        Iterator<RecoverSubHandler> it = subHandlerList.iterator();
+        while (it.hasNext()) {
+            ChannelStatus status = it.next().doRecover(channelCode);
+            if (status == ChannelStatus.BROKEN) {
+                return status;
+            }
+            if (status == ChannelStatus.NORMAL && it.hasNext()) {
+                continue;
+            }
+            if (status == ChannelStatus.NORMAL) {
+                return status;
+            }
+        }
+        return ChannelStatus.NORMAL;
     }
 }

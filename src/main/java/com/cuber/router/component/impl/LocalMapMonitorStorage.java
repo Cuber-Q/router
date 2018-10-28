@@ -46,6 +46,20 @@ public class LocalMapMonitorStorage implements MonitorStorage, InitializingBean 
         return result;
     }
 
+    @Override
+    public double readSuccessRate(String channelCode, int range) {
+        List<MonitorMetaData> list = read(channelCode, range);
+        double sum = 0;
+        double success = 0;
+        double successRate = 1;
+        sum = list.stream().mapToDouble(MonitorMetaData::getTotal).sum();
+        success = list.stream().mapToDouble(MonitorMetaData::getSuccess).sum();
+        if (sum != 0){
+            successRate = success / sum;
+        }
+        return successRate;
+    }
+
     private String buildKey(Long timestamp) {
         return String.valueOf(timestamp % DateUtils.MILLIS_PER_SECOND);
     }

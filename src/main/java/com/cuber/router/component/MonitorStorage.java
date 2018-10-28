@@ -11,4 +11,6 @@ public interface MonitorStorage {
 
     List<MonitorMetaData> read(String channelCode, int range);
 
+    double readSuccessRate(String channelCode, int range);
+
 }
